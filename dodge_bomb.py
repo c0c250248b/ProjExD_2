@@ -2,7 +2,7 @@ import os
 import sys
 import random
 import pygame as pg
-
+import time
 
 WIDTH, HEIGHT = 1100, 650
 DELTA = {
@@ -26,6 +26,30 @@ def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
         tate = False
     return yoko, tate
 
+def gameover(screen: pg.Surface) -> None:
+   """
+   ゲームオーバー画面と泣いているこうかとんを追加する関数
+   """
+   pp_img=pg.Surface((WIDTH,HEIGHT))  #黒背景の為の空surfaceをつくる
+   pg.draw.rect(pp_img,(0,0,0),(0,0,WIDTH,HEIGHT))  #矩形の黒背景の設定
+   pp_img.set_alpha(128)  #黒背景の透明度の設定
+   font = pg.font.Font(None,80)  #フォントの設定
+   text_Surf = font.render("Game Over",True,(255,255,255))  #表示する文字の設定
+   text_rect = text_Surf.get_rect(center=(WIDTH//2, HEIGHT//2))  #フォントの位置設定
+   
+   ph_img = pg.image.load("fig/8.png")  #画像ダウンロード
+   ph_rect1 =ph_img.get_rect(center=(WIDTH//2-200, HEIGHT//2))  #画像の位置設定
+   ph_rect2 =ph_img.get_rect(center=(WIDTH//2+200, HEIGHT//2))  #画像の位置設定
+   
+
+   screen.blit(pp_img,[0,0])  #黒背景描写
+   screen.blit(text_Surf,text_rect)  #テキスト描写
+   screen.blit(ph_img,ph_rect1)  #画像描写
+   screen.blit(ph_img,ph_rect2)  #画像描写
+
+
+   pg.display.update()  #更新
+   time.sleep(5)  #停止までのカウント
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -35,6 +59,7 @@ def main():
     kk_rct = kk_img.get_rect()
     kk_rct.center = 300, 200
 
+
     bb_img = pg.Surface((20, 20))  # 爆弾用の空のSurfaceを作る
     pg.draw.circle(bb_img, (255, 0, 0), (10, 10), 10)  # 爆弾円を描く
     bb_img.set_colorkey((0, 0, 0))  # 爆弾の黒い部分を透過させる
@@ -42,7 +67,9 @@ def main():
     bb_rct.centerx = random.randint(0, WIDTH)  # 爆弾の初期横座標を設定する
     bb_rct.centery = random.randint(0, HEIGHT)  # 爆弾の初期縦座標を設定する
     vx, vy = +5, +5  # 爆弾の速度
-
+    
+    
+    
     clock = pg.time.Clock()
     tmr = 0
     while True:
@@ -51,7 +78,7 @@ def main():
                 return
             
         if kk_rct.colliderect(bb_rct):  # こうかとんと爆弾の衝突判定
-            print("ゲームオーバー")
+            gameover(screen)
             return  # ゲームオーバーの意味でmain関数から出る
         screen.blit(bg_img, [0, 0]) 
 
