@@ -55,7 +55,7 @@ def init_bb_imgs() -> tuple[list[pg.Surface],list[int]]:
     """
     時間経過で爆弾が拡大、加速する関数。
     """
-    for r in range(1,11):
+    for r in range(1,11):  # 際限無く加速、巨大化するのはナンセンスなため、10段階に設定する
         bb_img =pg.Surface((20*r,20*r))
         pg.draw.circle(bb_img,(255,0,0),(10*r,10*r),10*r)
         bb_imgs.append(bb_img)
