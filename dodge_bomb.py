@@ -31,26 +31,34 @@ def gameover(screen: pg.Surface) -> None:
    ゲームオーバー画面と泣いているこうかとんを追加する関数
    """
    pp_img=pg.Surface((WIDTH,HEIGHT))  #黒背景の為の空surfaceをつくる
-   pg.draw.rect(pp_img,(0,0,0),(0,0,WIDTH,HEIGHT))  #矩形の黒背景の設定
+   pg.draw.rect(pp_img,(0,0,0),(0,0,WIDTH,HEIGHT))  # 矩形の黒背景の設定
    pp_img.set_alpha(128)  #黒背景の透明度の設定
    font = pg.font.Font(None,80)  #フォントの設定
-   text_Surf = font.render("Game Over",True,(255,255,255))  #表示する文字の設定
-   text_rect = text_Surf.get_rect(center=(WIDTH//2, HEIGHT//2))  #フォントの位置設定
+   text_Surf = font.render("Game Over",True,(255,255,255))  # 表示する文字の設定
+   text_rect = text_Surf.get_rect(center=(WIDTH//2, HEIGHT//2))  # フォントの位置設定
    
    ph_img = pg.image.load("fig/8.png")  #画像ダウンロード
-   ph_rect1 =ph_img.get_rect(center=(WIDTH//2-200, HEIGHT//2))  #画像の位置設定
-   ph_rect2 =ph_img.get_rect(center=(WIDTH//2+200, HEIGHT//2))  #画像の位置設定
+   ph_rect1 =ph_img.get_rect(center=(WIDTH//2-200, HEIGHT//2))  # 画像の位置設定
+   ph_rect2 =ph_img.get_rect(center=(WIDTH//2+200, HEIGHT//2))  # 画像の位置設定
    
 
-   screen.blit(pp_img,[0,0])  #黒背景描写
-   screen.blit(text_Surf,text_rect)  #テキスト描写
-   screen.blit(ph_img,ph_rect1)  #画像描写
-   screen.blit(ph_img,ph_rect2)  #画像描写
+   screen.blit(pp_img,[0,0])  # 黒背景描写
+   screen.blit(text_Surf,text_rect)  # テキスト描写
+   screen.blit(ph_img,ph_rect1)  # 画像描写
+   screen.blit(ph_img,ph_rect2)  # 画像描写
 
 
-   pg.display.update()  #更新
-   time.sleep(5)  #停止までのカウント
+   pg.display.update()  # 更新
+   time.sleep(5)  # 停止までのカウント
 
+def init_bb_imgs() -> tuple[list[pg.Surface],list[int]]:
+    """
+    時間経過で爆弾が拡大、加速する関数。
+    """
+    for r in range(1,11):
+        bb_img =pg.Surface((20*r,20*r))
+        pg.draw.circle(bb_img,(255,0,0),(10*r,10*r),10*r)
+        bb_imgs.append(bb_img)
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
