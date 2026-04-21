@@ -13,6 +13,19 @@ DELTA = {
 }
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
+def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
+    """
+    引数で与えられたRectが画面内か画面外かを判定する関数
+    引数：こうかとんRectまたは爆弾Rect
+    戻り値：横方向，縦方向判定結果（True: 画面内，False: 画面外）
+    """
+    yoko, tate = True, True
+    if rct.left < 0 or WIDTH < rct.right:  # 横方向判定
+        yoko = False
+    if rct.top < 0 or HEIGHT < rct.bottom:  # 縦方向判定
+        tate = False
+    return yoko, tate
+
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -40,21 +53,20 @@ def main():
 
         key_lst = pg.key.get_pressed()
         sum_mv = [0, 0]
-        # if key_lst[pg.K_UP]:
-        #     sum_mv[1] -= 5
-        # if key_lst[pg.K_DOWN]:
-        #     sum_mv[1] += 5
-        # if key_lst[pg.K_LEFT]:
-        #     sum_mv[0] -= 5
-        # if key_lst[pg.K_RIGHT]:
-        #     sum_mv[0] += 5
         for key, mv in DELTA.items():
             if key_lst[key]:
                 sum_mv[0] += mv[0]
                 sum_mv[1] += mv[1]
         kk_rct.move_ip(sum_mv)
+        if check_bound(kk_rct) != (True, True):  # 画面外だったら
+            kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
         screen.blit(kk_img, kk_rct)
         bb_rct.move_ip(vx, vy)  # 爆弾を移動させる
+        yoko, tate = check_bound(bb_rct)
+        if not yoko:  # 横方向の判定
+            vx *= -1
+        if not tate:  # 縦方向の判定
+            vy *= -1
         screen.blit(bb_img, bb_rct)  # 爆弾を表示させる
         pg.display.update()
         tmr += 1
